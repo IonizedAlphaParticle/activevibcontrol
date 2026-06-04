@@ -1,0 +1,89 @@
+#include <Wire.h>
+
+#define TRIG_PIN 3
+#define ECHO_PIN 2
+#define SENSOR_PIN A0
+
+
+const int maxPower = 950;
+const int targetDistance = 200;
+const int idlePower = 50;
+const float kP = 2.0;
+const float kD = 0.5;
+
+long duration;
+int distance;
+
+void setup() {
+  pinMode(10, OUTPUT);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  ICR1 = 1000;
+  OCR1B = 200;
+  TCCR1A = (1 << COM1B1) | (1 << WGM11);
+  TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11);
+  const float V_Quiescent = 2.53;
+  const float sensitivity = 0.0014;
+
+
+  Serial.begin(9600);
+  Serial.println("setup complete");
+  pinMode(SENSOR_PIN, INPUT);
+
+}
+
+
+void loop() {
+  static float filtered = 0.0;
+  static float prevFiltered = 0.0;
+  static float prevError = 0.0;
+  static unsigned long lastTime = 0;
+
+  unsigned long currentTime = millis();
+  float dt = (currentTime - lastTime) / 1000.0;
+  if (dt == 0) dt = 0.001;
+  lastTime = currentTime;
+
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  duration = pulseIn(ECHO_PIN, HIGH);
+  distance = duration * 0.34/2;
+
+  filtered = 0.9 * filtered + 0.1 * distance;
+
+  float error = (targetDistance - filtered) * 5;
+  float derivative = (error - prevError) / dt;
+  int pwmOutput = (int)(idlePower + kP * error - kD * derivative);
+  
+  if (distance > targetDistance){
+    pwmOutput = idlePower;
+  }
+
+  if (pwmOutput > maxPower) pwmOutput = maxPower;
+  if (pwmOutput < idlePower) pwmOutput = idlePower;
+
+  OCR1B = pwmOutput;  
+  prevError = error;
+  prevFiltered = filtered;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" mm | PWM: ");
+  Serial.println(pwmOutput);
+
+  int sensorValue = analogRead(SENSOR_PIN);
+  float voltage = sensorValue * (5.0 / 1023.0);
+  
+  Serial.print("Raw: ");
+  Serial.print(sensorValue);
+  Serial.print("\tVoltage: ");
+  Serial.println(voltage);
+
+  delay(500);
+
+}
