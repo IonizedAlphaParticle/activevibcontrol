@@ -13,16 +13,6 @@ fS = [64, 43, 36, 29, 21, 14]
 pwm = np.array(pwm)
 fieldStrength = np.array(fieldStrength)
 
-# B_tesla = fieldStrength/10000
-# sigma = 35000000
-# t = 0.003
-# w = 0.05
-# v = 0.05
-# F = sigma * t * w * v * B_tesla ** 2
-#
-# for pwm_val, force in zip(pwm, F):
-#     print(f"PWM {pwm_val}: {force*1000:.2f} mN")
-
 distance = np.array(distance)
 fS = np.array(fS)
 
@@ -44,26 +34,12 @@ r_2 = r2_score(fieldStrength, exp_model(pwm, *pwm_fieldstrength))
 r_21 = r2_score(fS, dist_model(distance, *distance_fieldstrength))
 
 
-# plt.scatter(pwm, fieldStrength, label='Measured data')
-# plt.plot(x, exp_model(x, *pwm_fieldstrength), label=f'Exponential fit (R²={r_2:.3f})')
-# plt.xlabel('OCR1B Value')
-# plt.ylabel('Magnetic Field Strength (Gauss)')
-# plt.legend()
-# plt.show()
-
 plt.scatter(distance, fS, label='Measured Data')
 plt.plot(x_dist, dist_model(x_dist, *distance_fieldstrength), label=f'Power Fit (R²={r_21:.3f})')
 plt.xlabel("Distance (mm)")
 plt.ylabel("Magnetic Field Strength (Gauss)")
 plt.legend()
 plt.show()
-
-# plt.scatter(pwm, F, label="PWM vs Eddy Current Force")
-# plt.plot(pwm, F)
-# plt.xlabel("PWM Duty Cycle")
-# plt.ylabel("Eddy Current Force (mN)")
-# plt.legend()
-# plt.show()
 
 
 print(f"PWM Model: B = {pwm_fieldstrength[0]:.4f} * e^")
