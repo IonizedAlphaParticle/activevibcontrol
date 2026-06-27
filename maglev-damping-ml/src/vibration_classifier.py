@@ -1,17 +1,19 @@
 """
 Pathway 2: Vibration Classifier
---------------------------------
-Classifies the disturbance type from a rolling window of HCSR-04 displacement
-readings. Trains entirely on synthetic waveforms so it needs NO hardware, then
-runs identically on live sensor data later.
 
-Classes map directly to the paper's framing of the maglev vibration problem:
-  0 = no_disturbance     (flat + sensor noise)
-  1 = low_freq_sway      (the "lateral swaying" the paper cites)
+Looks at a rolling window of displacement readings from the HC-SR04 and figures
+out what kind of disturbance is happening. We train it entirely on synthetic
+waveforms, so it needs no hardware, and the exact same model runs on live sensor
+data later.
+
+The four classes line up with the maglev vibration problem from our paper:
+  0 = no_disturbance     (just flat baseline + sensor noise)
+  1 = low_freq_sway      (the lateral swaying maglev systems are prone to)
   2 = high_freq_vibration
-  3 = impulse_shock       (sudden hit / step disturbance)
+  3 = impulse_shock      (a sudden hit or step)
 
-Pipeline: window of displacement -> features (time + FFT) -> RandomForest -> label
+How it works: take a window of displacement -> pull out time and frequency
+features -> feed them to a random forest -> get a label.
 """
 
 import numpy as np
