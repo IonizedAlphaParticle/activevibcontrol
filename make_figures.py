@@ -1,4 +1,3 @@
-"""Generate demo figures: the fixed-vs-adapted settling comparison."""
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
