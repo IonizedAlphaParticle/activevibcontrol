@@ -1,4 +1,4 @@
-"""Generate demo figures: the fixed-vs-adapted settling comparison."""
+"""This makes the demo figure comparing how the system settles with fixed gains vs our adapted ones."""
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
