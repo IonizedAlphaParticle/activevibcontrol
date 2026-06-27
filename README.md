@@ -98,20 +98,9 @@ python src/make_figures.py
 python src/pipeline.py
 ```
 
-### Going live with hardware (optional)
-The HCSR-04 ultrasonic sensor runs off the Arduino's USB 5V — the 7.26 V
-electromagnet supply is **not** required to demo the ML.
-
-1. Flash `arduino/displacement_streamer.ino` to an Arduino Uno.
-2. Stream into the pipeline:
-   ```bash
-   pip install pyserial
-   python src/live_serial.py --port /dev/ttyACM0   # or COM3 on Windows
-   ```
-
 ---
 
-## Repository layout
+## Repo layout
 
 ```
 maglev-damping-ml/
@@ -131,7 +120,7 @@ maglev-damping-ml/
 
 ---
 
-## Honesty notes (what is and isn't validated)
+## Note:
 
 - The gain-tuning benefit is demonstrated **in simulation**, using a plant model
   parameterized from measured field data. Hardware-in-the-loop validation
@@ -143,7 +132,7 @@ maglev-damping-ml/
   been directly measured; damping is inferred from the characterized field and
   the standard eddy-current force approximation.
 
-These limitations are inherited from the proof-of-concept stage of the hardware
+These limitationss are inherited from the proof-of-concept stage of the hardware
 and are stated so the scope is clear.
 
 ---
