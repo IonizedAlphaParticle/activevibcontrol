@@ -1,19 +1,19 @@
 """
 Pathway 1: Adaptive PD Gain Model
----------------------------------
-Learns to pick Kp/Kd as a function of operating point so the PD controller
-behaves consistently across the NONLINEAR PWM->field->force curve the paper
-characterized (B = 0.0644*exp(0.00706*OCR)+7.6024, force ~ B^2).
 
-Why this is a real ML contribution and not bolted-on:
-The achievable control authority (how much damping force a given gain command
-actually produces) scales with B^2. So the SAME Kp/Kd produce very different
-closed-loop behavior depending on duty cycle: gentle near the dead zone, violent
-near full field. A single fixed gain pair therefore either overshoots at high
-field or responds sluggishly at low field. The model adapts gains to the
-operating point to keep settling fast and overshoot low everywhere.
+The problem this solves: our electromagnet's field grows exponentially with PWM
+duty cycle (B = 0.0644*exp(0.00706*OCR) + 7.6024), and damping force scales with
+B^2. So how much force a given gain command actually delivers depends heavily on
+where you are on that curve. Near the dead zone the same gains barely do anything, but
+near full field they hit hard and overshoot.
 
-All in simulation -> no hardware required.
+That's why one fixed Kp/Kd can't win everywhere. Tune it for strong field and it
+overshoots when the field is weak. Tune it for weak field and it's sluggish when
+the field is strong.
+
+So we train a model to pick the right Kp/Kd for the current operating point,
+keeping settling fast and overshoot low across the whole range. Everything runs
+in simulation, so there is no hardware needed.
 """
 
 import numpy as np
