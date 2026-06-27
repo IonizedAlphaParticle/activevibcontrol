@@ -1,17 +1,20 @@
 """
 Integrated Control Pipeline: sense -> classify -> adapt
--------------------------------------------------------
-Ties Pathway 1 (adaptive gains) and Pathway 2 (vibration classifier) into one
-loop, the core narrative for the demo:
 
-  1. SENSE    : read a window of displacement (from HCSR-04, or synthetic here)
-  2. CLASSIFY : identify the disturbance type (no_disturbance / sway / vibration / shock)
-  3. ADAPT    : pick Kp/Kd for the current duty-cycle operating point, and bias
-                the response based on the disturbance class
-  4. ACTUATE  : (on hardware) command the PWM duty cycle
+This is where the two models come together, and it's the heart of the demo. One
+loop does four things:
 
-This module runs fully offline on synthetic windows so it can be demoed with no
-hardware. Swap `synthetic_stream()` for `serial_stream()` to go live.
+  1. SENSE    - grab a window of displacement readings (from the HC-SR04, or
+                synthetic data here)
+  2. CLASSIFY - figure out what kind of disturbance it is: nothing, sway,
+                vibration, or a shock
+  3. ADAPT    - pick the right Kp/Kd for the current duty cycle, then nudge the
+                response based on what kind of disturbance we're dealing with
+  4. ACTUATE  - on real hardware, send the PWM command to the electromagnet
+
+It runs entirely on synthetic data, so youu can demo the whole thing with nothing
+plugged in. When you're ready to go live, swap synthetic_stream() for the serial
+reader.
 """
 
 import numpy as np
