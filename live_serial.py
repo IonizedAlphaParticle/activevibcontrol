@@ -1,23 +1,3 @@
-"""
-Live serial bridge (optional, needs hardware)
----------------------------------------------
-Reads displacement from the Arduino over USB serial, fills a rolling window,
-and runs the integrated pipeline on it in real time. The HCSR-04 runs off the
-Arduino's 5V (USB powered) -- the electromagnet / 7.26V battery pack is NOT
-needed just to demo sense->classify->adapt.
-
-Arduino side should print one displacement value (mm) per line, e.g.:
-    32.4
-    33.1
-    ...
-
-Usage:
-    python live_serial.py --port /dev/ttyACM0   (Linux/Mac)
-    python live_serial.py --port COM3           (Windows)
-
-Requires: pip install pyserial
-"""
-
 import argparse
 import collections
 import numpy as np
