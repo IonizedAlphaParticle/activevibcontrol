@@ -56,7 +56,7 @@ overshoot substantially across the low-and-mid field range:
 | OCR 800 (≈26 G) | 28%                  | 6%                   |
 | OCR 950 (≈60 G) | 0% (tuned here)      | 0%                   |
 
-![Fixed vs adapted](figures/fig_adaptive_vs_fixed.png)
+![Fixed vs adapted](maglev-damping-ml/figures/fig_adaptive_vs_fixed.png)
 
 ### Pathway 2 — Real-time vibration classifier (`src/vibration_classifier.py`)
 A RandomForest classifies the displacement stream into one of four disturbance
